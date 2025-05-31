@@ -16,6 +16,14 @@ class Program
     static void Main()
     {
         ScriptureLibrary library = new ScriptureLibrary("scriptures.txt");
+        if (!library.HasScriptures())
+        {
+            Console.WriteLine("No scriptures found. Please ensure 'scriptures.txt' exists and has content in the format:");
+            Console.WriteLine("Reference|Scripture text");
+            Console.WriteLine("Example: John 3:16|For God so loved the world...");
+            return;
+        }
+
         Scripture scripture = library.GetRandomScripture();
 
         while (!scripture.IsCompletelyHidden())
@@ -23,7 +31,7 @@ class Program
             Console.Clear();
             Console.WriteLine(scripture);
             Console.WriteLine("\nPress Enter to hide words or type 'quit' to exit.");
-            
+
             string input = Console.ReadLine();
             if (input?.ToLower() == "quit") break;
 
@@ -48,7 +56,7 @@ class ScriptureLibrary
     private void LoadScriptures(string filePath)
     {
         if (!File.Exists(filePath)) return;
-        
+
         var lines = File.ReadAllLines(filePath);
         foreach (var line in lines)
         {
@@ -59,6 +67,8 @@ class ScriptureLibrary
             }
         }
     }
+
+    public bool HasScriptures() => _scriptures.Count > 0;
 
     public Scripture GetRandomScripture()
     {
